@@ -1,0 +1,46 @@
+# コンテナイメージビルドと AWS 環境へのデプロイ
+name: build and deploy redash staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - for_paiza_2025
+    # デプロイ対象外で良い path は適宜追加してください
+    paths-ignore:
+      - '.circleci/**/*'
+      - '.git_hooks/**/*'
+      - '.github/**/*'
+      - 'docker-compose.yaml'
+      - 'tests/**/*'
+      - '**/README*.md'
+
+jobs:
+  build_and_deploy_redash_staging:
+    name: build and deploy redash staging
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-1
+          role-to-assume: 'arn:aws:iam::350733110429:role/service-role/data-share-snd-role-redash-build-and-deploy'
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: data-share-snd-ecr-redash
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} .
+          docker push ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}
