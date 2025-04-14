@@ -18,6 +18,8 @@ on:
 jobs:
   build_and_deploy_redash_staging:
     name: build and deploy redash staging
+    permissions:
+      id-token: write
     runs-on:
       labels: ubuntu-latest
     steps:
