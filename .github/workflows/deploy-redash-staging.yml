@@ -23,7 +23,7 @@ jobs:
     runs-on:
       labels: ubuntu-latest
     steps:
-      - uses: Kesin11/actions-timeline@v1
+      - uses: Kesin11/actions-timeline@6aeaf437ef4d950e33d045805e2c0435f0f4ff13 # v1.0.1
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
