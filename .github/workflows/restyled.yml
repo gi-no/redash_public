@@ -11,13 +11,13 @@ jobs:
   restyled:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: restyled-io/actions/setup@v4
+      - uses: restyled-io/actions/setup@388f3b246890dba916e190e73df2bf54d1c182e9 # v4.3.2
       - id: restyler
-        uses: restyled-io/actions/run@v4
+        uses: restyled-io/actions/run@388f3b246890dba916e190e73df2bf54d1c182e9 # v4.3.2
         with:
           fail-on-differences: true
 
@@ -25,7 +25,7 @@ jobs:
           !cancelled() &&
           steps.restyler.outputs.success == 'true' &&
           github.event.pull_request.head.repo.full_name == github.repository
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
         with:
           base: ${{ steps.restyler.outputs.restyled-base }}
           branch: ${{ steps.restyler.outputs.restyled-head }}
